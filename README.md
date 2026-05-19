@@ -1,282 +1,470 @@
 # End-to-End ML Pipeline with MLflow
-### Credit Card Fraud Detection · Random Forest · SMOTE · FastAPI · Streamlit
+### Credit Card Fraud Detection · FastAPI · MLflow · Streamlit · Drift Detection · Auto Retraining
 
 ---
 
-## Overview
+# Overview
 
-A production-grade machine learning pipeline for real-time credit card fraud detection.
-Trained on 284,807 transactions (492 fraud cases — 0.17% imbalance), this project demonstrates
-the full ML lifecycle: data preprocessing, experiment tracking, model registry, automated
-retraining, REST API serving, and an interactive dashboard.
+A production-style end-to-end machine learning pipeline for real-time credit card fraud detection using:
 
-**Key finding:** SMOTE oversampling reduced missed fraud cases from 19 to 13 out of 98 test
-fraud transactions — a 32% reduction in undetected fraud compared to the baseline.
+- Random Forest
+- SMOTE oversampling
+- MLflow experiment tracking + model registry
+- FastAPI inference serving
+- Streamlit monitoring dashboard
+- SHAP explainability
+- Drift detection
+- Automated retraining pipeline
+
+The project demonstrates the complete ML lifecycle from data preprocessing and experimentation to deployment, monitoring, drift analysis, and production-safe retraining.
 
 ---
 
-## Architecture
+# Key Results
 
-```
+| Model | Recall | Precision | ROC-AUC | Fraud Missed |
+|---|---|---|---|---|
+| RF-baseline-no-sampling | 0.8061 | 0.9405 | 0.9741 | 19 |
+| RF-class-weight-balanced | 0.8163 | 0.8081 | 0.9804 | 18 |
+| RF-smote | **0.8673** | 0.7658 | 0.9797 | **13** |
+| RF-smote-tuned | 0.8469 | 0.8646 | 0.9770 | 15 |
+| GBM-smote | 0.8673 | 0.5500+ | 0.9777 | 13 |
+
+## Best Model
+- Random Forest + SMOTE
+- Recall: **86.73%**
+- ROC-AUC: **0.9797**
+- Fraud missed reduced from **19 → 13**
+- ~32% reduction in undetected fraud compared to baseline
+
+---
+
+# System Architecture
+
+```text
 creditcard.csv
       │
       ▼
-preprocess.py ──── SMOTE / Class Weight / Baseline
+preprocess.py
+(Scaling + SMOTE + Split)
       │
       ▼
-train.py ──────── 5 Experiments ──── MLflow Tracking
-      │                                     │
-      ▼                                     ▼
-retrain.py ───── Scheduled            Model Registry
-(24hr loop)      Retraining           (fraud-detector)
-                                             │
-                                             ▼
-                                       api/main.py
-                                       (FastAPI · port 8000)
-                                             │
-                                             ▼
-                                    dashboard/app.py
-                                    (Streamlit · port 8501)
+train.py
+(ML Experiments)
+      │
+      ▼
+MLflow Tracking Server
+      │
+      ▼
+MLflow Model Registry
+      │
+      ▼
+Production Alias
+(fraud-detector@production)
+      │
+      ▼
+FastAPI Inference Server
+(api/main.py)
+      │
+      ├── SHAP Explainability
+      ├── Inference Logging
+      ├── Prediction Cache
+      ├── Rate Limiting
+      └── Drift Monitoring
+      │
+      ▼
+Streamlit Dashboard
+      │
+      ▼
+Drift Detection + Retraining
+(src/retrain.py)
 ```
 
 ---
 
-## Results
+# Features
 
-### MLflow Experiment Comparison
+## Machine Learning
+- Random Forest fraud detection
+- Gradient Boosting comparison
+- SMOTE oversampling
+- Class imbalance handling
+- Multiple experiment comparison
+- Precision / Recall / ROC-AUC tracking
 
-![Experiment Results](Screenshots/Exp%20Results.png)
+## MLflow Integration
+- Experiment tracking
+- Metrics logging
+- Artifact logging
+- Model registry
+- Production aliases
+- Versioned model serving
 
-![All Runs](Screenshots/All%20Runs%20Screenshot.png)
+## FastAPI Inference Server
+- Real-time fraud prediction
+- Batch prediction endpoint
+- SHAP explanations
+- Health monitoring
+- Threshold analysis
+- Rate limiting
+- Prediction caching
 
-| Run | Sampling Strategy | Recall | ROC-AUC | Fraud Missed | False Alarms |
-|---|---|---|---|---|---|
-| RF-baseline-no-sampling | None | 0.8061 | 0.9741 | 19 | 5 |
-| RF-class-weight-balanced | Class Weight | 0.8163 | 0.9804 | 18 | 19 |
-| RF-smote | SMOTE | **0.8673** | 0.9797 | **13** | 26 |
-| RF-smote-tuned | SMOTE | 0.8469 | 0.9770 | 15 | 13 |
-| GBM-smote | SMOTE | 0.8673 | 0.9777 | 13 | 71 |
+## Monitoring
+- SQLite inference logging
+- Live monitoring dashboard
+- Fraud rate tracking
+- Latency tracking
+- Prediction distribution tracking
 
-> **Best model: RF-smote (v1)** — highest recall with far fewer false alarms than GBM.
-> Accuracy is intentionally de-emphasised: 99.96% accuracy on imbalanced data is meaningless.
-> Recall and ROC-AUC are the metrics that matter.
+## Drift Detection
+- Population Stability Index (PSI)
+- Kolmogorov-Smirnov tests
+- Prediction drift analysis
+- Feature drift analysis
 
-![Recall Chart](Screenshots/Recall%20Fraud%20Screenshot.png)
-
----
-
-## Dataset Analysis
-
-### Class Imbalance
-
-![Class Distribution](Screenshots/class_distribution.png)
-
-284,807 transactions. 492 fraud (0.17%). A naive model that predicts "legit" every time
-achieves 99.83% accuracy — which is why accuracy is the wrong metric here.
-
-### Feature Distributions
-
-![Feature Distributions](Screenshots/feature_distributions.png)
-
-V1–V28 are PCA-transformed features (anonymized for privacy). Amount and Time are the
-only raw features — both scaled using StandardScaler before training.
-
-### Correlation Heatmap
-
-![Correlation Heatmap](Screenshots/correlation_heatmap.png)
-
-### Transaction Time Patterns
-
-![Time Distribution](Screenshots/time_distribution.png)
-
-Fraud transactions cluster differently in time compared to legitimate ones —
-visible in the distribution shape above.
+## Automated Retraining
+- Scheduled retraining
+- Drift-triggered retraining
+- Automatic model comparison
+- Production-safe promotion logic
 
 ---
 
-## Live Dashboard
+# Screenshots
 
-### Experiment Results Page
-![Experiment Results](Screenshots/Exp%20Results.png)
+## MLflow Experiment Results
 
-### Legitimate Transaction
-![Legit Transaction](Screenshots/Legit%20Transaction.png)
+### Experiment Comparison
+![Experiment Results](Screenshots/Screenshots/expresult1.png)
 
-### Fraud Detected
-![Fraud Transaction](Screenshots/Fraud%20Transaction.png)
+### Experiment Metrics
+![Experiment Results 2](Screenshots/Screenshots/expresult2.png)
 
-### Production Model Info
-![Production Model Info](Screenshots/Prod%20Model%20Info.png)
+### All MLflow Runs
+![All Runs](Screenshots/Screenshots/allrunscreenshot.png)
 
----
-
-## MLflow Model Registry
-
-![Production Model](Screenshots/ProductionV1%20Screeenshot.png)
-
-Models are registered automatically when recall > 0.85 and ROC-AUC > 0.97.
-The best model is promoted to the `production` alias and loaded by the API at startup.
+### Recall Comparison
+![Recall Fraud](Screenshots/Screenshots/Recall%20Fraud%20Screenshot.png)
 
 ---
 
-## Project Structure
+# Live Prediction Dashboard
 
-```
-ml-pipeline-mlflow/
-├── data/
-│   └── creditcard.csv          ← Kaggle dataset (not in repo)
-├── src/
-│   ├── preprocess.py           ← Scaling, SMOTE, train/test split
-│   ├── train.py                ← 5 MLflow experiments
-│   └── retrain.py              ← Scheduled retraining loop
+## Legitimate Transaction Prediction
+![Legit Transaction](Screenshots/Screenshots/Legit%20Transaction.png)
+
+## Fraud Detection Prediction
+![Fraud Transaction](Screenshots/Screenshots/Fraud%20Transaction.png)
+
+---
+
+# Monitoring Dashboard
+
+## Inference Monitoring
+![Inference Monitoring](Screenshots/Screenshots/inferencemonitoring1.png)
+
+## Prediction Analytics
+![Inference Monitoring 2](Screenshots/Screenshots/inferencemonitoring2.png)
+
+---
+
+# Drift Detection
+
+## Drift Analysis Dashboard
+![Drift Detection](Screenshots/Screenshots/driftdetection.png)
+
+---
+
+# Production Model Information
+
+## Production Model Metrics
+![Production Model](Screenshots/Screenshots/prodmodel.png)
+
+## Model Information
+![Model Info](Screenshots/Screenshots/modelinfo.png)
+
+---
+
+# Dataset Analysis
+
+## Class Distribution
+![Class Distribution](Screenshots/Screenshots/class_distribution.png)
+
+## Correlation Heatmap
+![Correlation Heatmap](Screenshots/Screenshots/correlation_heatmap.png)
+
+## Feature Distributions
+![Feature Distributions](Screenshots/Screenshots/feature_distributions.png)
+
+## Time Distribution
+![Time Distribution](Screenshots/Screenshots/time_distribution.png)
+
+---
+
+# Project Structure
+
+```text
+End-to-End ML Pipeline with MLflow/
+│
 ├── api/
-│   └── main.py                 ← FastAPI inference server
+│   ├── main.py
+│   └── inference_logger.py
+│
 ├── dashboard/
-│   └── app.py                  ← Streamlit UI
-├── Screenshots/                ← README images
-├── Dockerfile
+│   └── app.py
+│
+├── data/
+│   └── creditcard.csv
+│
+├── src/
+│   ├── preprocess.py
+│   ├── train.py
+│   ├── retrain.py
+│   └── drift_detector.py
+│
+├── Screenshots/
+│   └── Screenshots/
+│
+├── requirements.txt
 ├── docker-compose.yml
-└── requirements.txt
+├── Dockerfile
+├── scalers.pkl
+├── reference_stats.json
+└── README.md
 ```
 
 ---
 
-## Quickstart
+# Installation
 
-### 1. Clone and install
+## Clone Repository
 
 ```bash
 git clone https://github.com/AdithyaRaoK14/End-to-End-ML-Pipeline-with-MLflow.git
-cd ml-pipeline-mlflow
 
+cd End-to-End-ML-Pipeline-with-MLflow
+```
+
+---
+
+# Create Virtual Environment
+
+```bash
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+```
+
+### Windows
+```bash
+venv\Scripts\activate
+```
+
+### Linux / Mac
+```bash
+source venv/bin/activate
+```
+
+---
+
+# Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. Download dataset
+---
 
-```bash
-# From Kaggle: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
-# Place creditcard.csv in data/
+# Dataset
+
+Download dataset from Kaggle:
+
+https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+
+Place:
+
+```text
+creditcard.csv
 ```
 
-### 3. Start MLflow
+inside:
 
-```bash
-mlflow ui --port 5000
-# Open http://localhost:5000
+```text
+data/
 ```
 
-### 4. Run experiments
+---
+
+# Running the Project
+
+## 1. Start MLflow
+
+```bash
+mlflow server --host 0.0.0.0 --port 5000
+```
+
+MLflow UI:
+
+```text
+http://localhost:5000
+```
+
+---
+
+## 2. Train Models
 
 ```bash
 python src/train.py
-# Runs 5 experiments, logs to MLflow, registers best model
 ```
 
-### 5. Set production alias
+This:
+- runs multiple experiments
+- logs metrics
+- registers best models
+- generates drift reference statistics
+
+---
+
+## 3. Set Production Alias
 
 ```bash
 python -c "
 import mlflow
 from mlflow.tracking import MlflowClient
+
 mlflow.set_tracking_uri('http://localhost:5000')
+
 client = MlflowClient()
-client.set_registered_model_alias('fraud-detector', 'production', '1')
-print('Done')
+
+client.set_registered_model_alias(
+    'fraud-detector',
+    'production',
+    '6'
+)
+
+print('Production alias updated')
 "
 ```
 
-### 6. Start API
+---
+
+## 4. Start FastAPI Server
 
 ```bash
 uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
-# API docs: http://localhost:8000/docs
 ```
 
-### 7. Start dashboard
+Swagger Docs:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+## 5. Start Streamlit Dashboard
 
 ```bash
 streamlit run dashboard/app.py
-# Dashboard: http://localhost:8501
 ```
 
-### Docker (alternative)
+Dashboard:
 
-```bash
-docker-compose up --build
+```text
+http://localhost:8501
 ```
 
 ---
 
-## API Reference
+## 6. Start Retraining Scheduler
 
-**Base URL:** `http://localhost:8000`
+```bash
+python src/retrain.py
+```
+
+This enables:
+- scheduled retraining
+- drift-triggered retraining
+- automatic model comparison
+- safe production promotion
+
+---
+
+# API Endpoints
 
 | Endpoint | Method | Description |
 |---|---|---|
-| `/predict` | POST | Predict fraud for a transaction |
-| `/health` | GET | API and model health status |
-| `/model-info` | GET | Production model metrics and params |
-| `/threshold-info` | GET | Precision-recall tradeoff explanation |
-| `/docs` | GET | Interactive Swagger UI |
+| `/predict` | POST | Fraud prediction |
+| `/predict-batch` | POST | Batch prediction |
+| `/explain` | POST | SHAP explanations |
+| `/health` | GET | API health |
+| `/model-info` | GET | Production model metrics |
+| `/threshold-info` | GET | Threshold tradeoff info |
+| `/monitoring/stats` | GET | Monitoring statistics |
+| `/monitoring/recent` | GET | Recent predictions |
+| `/drift-report` | GET | Drift analysis |
 
-### Example Request
+---
+
+# Example Prediction Request
 
 ```bash
-curl -X POST http://localhost:8000/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "features": [-2.3122, 1.952, -1.6099, 3.9979, -0.5222,
-                 -1.4265, -2.5374, 1.3917, -2.7701, -2.7723,
-                  3.202, -2.8999, -0.5952, -4.2893, 0.3897,
-                 -1.1407, -2.8301, -0.0168, 0.417, 0.1269,
-                  0.5172, -0.035, -0.4652, 0.3202, 0.0445,
-                  0.1778, 0.2611, -0.1433],
-    "amount": 0.0,
-    "time": 406.0
-  }'
-```
-
-### Example Response
-
-```json
-{
-  "transaction_id": "txn_1779165548002",
-  "is_fraud": true,
-  "fraud_probability": 0.8921,
-  "risk_level": "HIGH",
-  "latency_ms": 76.1,
-  "model_version": "v1"
-}
+curl -X POST http://localhost:8000/predict ^
+-H "Content-Type: application/json" ^
+-d "{
+  \"features\": [
+    -2.3122, 1.9520, -1.6099, 3.9979, -0.5222,
+    -1.4265, -2.5374, 1.3917, -2.7701, -2.7723,
+    3.2020, -2.8999, -0.5952, -4.2893, 0.3897,
+    -1.1407, -2.8301, -0.0168, 0.4170, 0.1269,
+    0.5172, -0.0350, -0.4652, 0.3202, 0.0445,
+    0.1778, 0.2611, -0.1433
+  ],
+  \"amount\": 149.62,
+  \"time\": 406
+}"
 ```
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-| Component | Technology |
+| Category | Technology |
 |---|---|
-| ML Training | scikit-learn, imbalanced-learn |
-| Experiment Tracking | MLflow 3.12 |
-| Model Registry | MLflow Model Registry |
-| API | FastAPI + Uvicorn |
+| ML Framework | scikit-learn |
+| Imbalance Handling | imbalanced-learn |
+| Experiment Tracking | MLflow |
+| API | FastAPI |
 | Dashboard | Streamlit |
-| Containerization | Docker + Docker Compose |
-| Data | pandas, numpy |
+| Explainability | SHAP |
+| Monitoring | SQLite |
 | Visualization | matplotlib, seaborn |
+| Containerization | Docker |
 
 ---
 
+# Dataset
 
-## Dataset
+- 284,807 transactions
+- 492 fraud cases
+- 0.1727% fraud rate
+- Highly imbalanced classification problem
 
-[Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) — Kaggle
-
-284,807 transactions · 492 fraud cases · 0.17% fraud rate  
-Features V1–V28 are PCA-transformed (anonymized). Raw features: Amount, Time.
+Dataset Source:
+https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
 
 ---
 
-*Related: [CodeIntel-RAG](https://github.com/AdithyaRaoK14/CodeIntel-RAG-Agentic-Codebase-Intelligence-Platform-with-MCP.git) — Agentic RAG platform for codebase intelligence*
+# Developer
+
+### Adithya Rao Kalathur
+
+GitHub:
+https://github.com/AdithyaRaoK14
+
+---
+
+# Related Project
+
+## CodeIntel-RAG
+Agentic RAG platform for codebase intelligence with MCP integration.
+
+https://github.com/AdithyaRaoK14/CodeIntel-RAG-Agentic-Codebase-Intelligence-Platform-with-MCP.git
