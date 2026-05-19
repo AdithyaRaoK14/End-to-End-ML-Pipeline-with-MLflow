@@ -1,4 +1,5 @@
 # End-to-End ML Pipeline with MLflow
+
 ### Credit Card Fraud Detection · FastAPI · MLflow · Streamlit · Drift Detection · Auto Retraining
 
 ---
@@ -7,14 +8,14 @@
 
 A production-style end-to-end machine learning pipeline for real-time credit card fraud detection using:
 
-- Random Forest
-- SMOTE oversampling
-- MLflow experiment tracking + model registry
-- FastAPI inference serving
-- Streamlit monitoring dashboard
-- SHAP explainability
-- Drift detection
-- Automated retraining pipeline
+* Random Forest
+* SMOTE oversampling
+* MLflow experiment tracking + model registry
+* FastAPI inference serving
+* Streamlit monitoring dashboard
+* SHAP explainability
+* Drift detection
+* Automated retraining pipeline
 
 The project demonstrates the complete ML lifecycle from data preprocessing and experimentation to deployment, monitoring, drift analysis, and production-safe retraining.
 
@@ -22,20 +23,21 @@ The project demonstrates the complete ML lifecycle from data preprocessing and e
 
 # Key Results
 
-| Model | Recall | Precision | ROC-AUC | Fraud Missed |
-|---|---|---|---|---|
-| RF-baseline-no-sampling | 0.8061 | 0.9405 | 0.9741 | 19 |
-| RF-class-weight-balanced | 0.8163 | 0.8081 | 0.9804 | 18 |
-| RF-smote | **0.8673** | 0.7658 | 0.9797 | **13** |
-| RF-smote-tuned | 0.8469 | 0.8646 | 0.9770 | 15 |
-| GBM-smote | 0.8673 | 0.5500+ | 0.9777 | 13 |
+| Model                    | Recall     | Precision | ROC-AUC | Fraud Missed |
+| ------------------------ | ---------- | --------- | ------- | ------------ |
+| RF-baseline-no-sampling  | 0.8061     | 0.9405    | 0.9741  | 19           |
+| RF-class-weight-balanced | 0.8163     | 0.8081    | 0.9804  | 18           |
+| RF-smote                 | **0.8673** | 0.7658    | 0.9797  | **13**       |
+| RF-smote-tuned           | 0.8469     | 0.8646    | 0.9770  | 15           |
+| GBM-smote                | 0.8673     | 0.5500+   | 0.9777  | 13           |
 
 ## Best Model
-- Random Forest + SMOTE
-- Recall: **86.73%**
-- ROC-AUC: **0.9797**
-- Fraud missed reduced from **19 → 13**
-- ~32% reduction in undetected fraud compared to baseline
+
+* Random Forest + SMOTE
+* Recall: **86.73%**
+* ROC-AUC: **0.9797**
+* Fraud missed reduced from **19 → 13**
+* ~32% reduction in undetected fraud compared to baseline
 
 ---
 
@@ -85,48 +87,54 @@ Drift Detection + Retraining
 # Features
 
 ## Machine Learning
-- Random Forest fraud detection
-- Gradient Boosting comparison
-- SMOTE oversampling
-- Class imbalance handling
-- Multiple experiment comparison
-- Precision / Recall / ROC-AUC tracking
+
+* Random Forest fraud detection
+* Gradient Boosting comparison
+* SMOTE oversampling
+* Class imbalance handling
+* Multiple experiment comparison
+* Precision / Recall / ROC-AUC tracking
 
 ## MLflow Integration
-- Experiment tracking
-- Metrics logging
-- Artifact logging
-- Model registry
-- Production aliases
-- Versioned model serving
+
+* Experiment tracking
+* Metrics logging
+* Artifact logging
+* Model registry
+* Production aliases
+* Versioned model serving
 
 ## FastAPI Inference Server
-- Real-time fraud prediction
-- Batch prediction endpoint
-- SHAP explanations
-- Health monitoring
-- Threshold analysis
-- Rate limiting
-- Prediction caching
+
+* Real-time fraud prediction
+* Batch prediction endpoint
+* SHAP explanations
+* Health monitoring
+* Threshold analysis
+* Rate limiting
+* Prediction caching
 
 ## Monitoring
-- SQLite inference logging
-- Live monitoring dashboard
-- Fraud rate tracking
-- Latency tracking
-- Prediction distribution tracking
+
+* SQLite inference logging
+* Live monitoring dashboard
+* Fraud rate tracking
+* Latency tracking
+* Prediction distribution tracking
 
 ## Drift Detection
-- Population Stability Index (PSI)
-- Kolmogorov-Smirnov tests
-- Prediction drift analysis
-- Feature drift analysis
+
+* Population Stability Index (PSI)
+* Kolmogorov-Smirnov tests
+* Prediction drift analysis
+* Feature drift analysis
 
 ## Automated Retraining
-- Scheduled retraining
-- Drift-triggered retraining
-- Automatic model comparison
-- Production-safe promotion logic
+
+* Scheduled retraining
+* Drift-triggered retraining
+* Automatic model comparison
+* Production-safe promotion logic
 
 ---
 
@@ -135,69 +143,84 @@ Drift Detection + Retraining
 ## MLflow Experiment Results
 
 ### Experiment Comparison
-![Experiment Results](Screenshots/Screenshots/expresult1.png)
+
+![Experiment Results](Screenshots/expresult1.png)
 
 ### Experiment Metrics
-![Experiment Results 2](Screenshots/Screenshots/expresult2.png)
+
+![Experiment Results 2](Screenshots/expresult2.png)
 
 ### All MLflow Runs
-![All Runs](Screenshots/Screenshots/allrunscreenshot.png)
+
+![All Runs](Screenshots/allrunscreenshot.png)
 
 ### Recall Comparison
-![Recall Fraud](Screenshots/Screenshots/Recall%20Fraud%20Screenshot.png)
+
+![Recall Fraud](Screenshots/Recall%20Fraud%20Screenshot.png)
 
 ---
 
 # Live Prediction Dashboard
 
 ## Legitimate Transaction Prediction
-![Legit Transaction](Screenshots/Screenshots/Legit%20Transaction.png)
+
+![Legit Transaction](Screenshots/Legit%20Transaction.png)
 
 ## Fraud Detection Prediction
-![Fraud Transaction](Screenshots/Screenshots/Fraud%20Transaction.png)
+
+![Fraud Transaction](Screenshots/Fraud%20Transaction.png)
 
 ---
 
 # Monitoring Dashboard
 
 ## Inference Monitoring
-![Inference Monitoring](Screenshots/Screenshots/inferencemonitoring1.png)
+
+![Inference Monitoring](Screenshots/inferencemonitoring1.png)
 
 ## Prediction Analytics
-![Inference Monitoring 2](Screenshots/Screenshots/inferencemonitoring2.png)
+
+![Inference Monitoring 2](Screenshots/inferencemonitoring2.png)
 
 ---
 
 # Drift Detection
 
 ## Drift Analysis Dashboard
-![Drift Detection](Screenshots/Screenshots/driftdetection.png)
+
+![Drift Detection](Screenshots/driftdetection.png)
 
 ---
 
 # Production Model Information
 
 ## Production Model Metrics
-![Production Model](Screenshots/Screenshots/prodmodel.png)
+
+![Production Model](Screenshots/prodmodel.png)
 
 ## Model Information
-![Model Info](Screenshots/Screenshots/modelinfo.png)
+
+![Model Info](Screenshots/modelinfo.png)
 
 ---
 
 # Dataset Analysis
 
 ## Class Distribution
-![Class Distribution](Screenshots/Screenshots/class_distribution.png)
+
+![Class Distribution](Screenshots/class_distribution.png)
 
 ## Correlation Heatmap
-![Correlation Heatmap](Screenshots/Screenshots/correlation_heatmap.png)
+
+![Correlation Heatmap](Screenshots/correlation_heatmap.png)
 
 ## Feature Distributions
-![Feature Distributions](Screenshots/Screenshots/feature_distributions.png)
+
+![Feature Distributions](Screenshots/feature_distributions.png)
 
 ## Time Distribution
-![Time Distribution](Screenshots/Screenshots/time_distribution.png)
+
+![Time Distribution](Screenshots/time_distribution.png)
 
 ---
 
@@ -223,7 +246,6 @@ End-to-End ML Pipeline with MLflow/
 │   └── drift_detector.py
 │
 ├── Screenshots/
-│   └── Screenshots/
 │
 ├── requirements.txt
 ├── docker-compose.yml
@@ -254,11 +276,13 @@ python -m venv venv
 ```
 
 ### Windows
+
 ```bash
 venv\Scripts\activate
 ```
 
 ### Linux / Mac
+
 ```bash
 source venv/bin/activate
 ```
@@ -316,10 +340,11 @@ python src/train.py
 ```
 
 This:
-- runs multiple experiments
-- logs metrics
-- registers best models
-- generates drift reference statistics
+
+* runs multiple experiments
+* logs metrics
+* registers best models
+* generates drift reference statistics
 
 ---
 
@@ -381,26 +406,27 @@ python src/retrain.py
 ```
 
 This enables:
-- scheduled retraining
-- drift-triggered retraining
-- automatic model comparison
-- safe production promotion
+
+* scheduled retraining
+* drift-triggered retraining
+* automatic model comparison
+* safe production promotion
 
 ---
 
 # API Endpoints
 
-| Endpoint | Method | Description |
-|---|---|---|
-| `/predict` | POST | Fraud prediction |
-| `/predict-batch` | POST | Batch prediction |
-| `/explain` | POST | SHAP explanations |
-| `/health` | GET | API health |
-| `/model-info` | GET | Production model metrics |
-| `/threshold-info` | GET | Threshold tradeoff info |
-| `/monitoring/stats` | GET | Monitoring statistics |
-| `/monitoring/recent` | GET | Recent predictions |
-| `/drift-report` | GET | Drift analysis |
+| Endpoint             | Method | Description              |
+| -------------------- | ------ | ------------------------ |
+| `/predict`           | POST   | Fraud prediction         |
+| `/predict-batch`     | POST   | Batch prediction         |
+| `/explain`           | POST   | SHAP explanations        |
+| `/health`            | GET    | API health               |
+| `/model-info`        | GET    | Production model metrics |
+| `/threshold-info`    | GET    | Threshold tradeoff info  |
+| `/monitoring/stats`  | GET    | Monitoring statistics    |
+| `/monitoring/recent` | GET    | Recent predictions       |
+| `/drift-report`      | GET    | Drift analysis           |
 
 ---
 
@@ -427,26 +453,26 @@ curl -X POST http://localhost:8000/predict ^
 
 # Tech Stack
 
-| Category | Technology |
-|---|---|
-| ML Framework | scikit-learn |
-| Imbalance Handling | imbalanced-learn |
-| Experiment Tracking | MLflow |
-| API | FastAPI |
-| Dashboard | Streamlit |
-| Explainability | SHAP |
-| Monitoring | SQLite |
-| Visualization | matplotlib, seaborn |
-| Containerization | Docker |
+| Category            | Technology          |
+| ------------------- | ------------------- |
+| ML Framework        | scikit-learn        |
+| Imbalance Handling  | imbalanced-learn    |
+| Experiment Tracking | MLflow              |
+| API                 | FastAPI             |
+| Dashboard           | Streamlit           |
+| Explainability      | SHAP                |
+| Monitoring          | SQLite              |
+| Visualization       | matplotlib, seaborn |
+| Containerization    | Docker              |
 
 ---
 
 # Dataset
 
-- 284,807 transactions
-- 492 fraud cases
-- 0.1727% fraud rate
-- Highly imbalanced classification problem
+* 284,807 transactions
+* 492 fraud cases
+* 0.1727% fraud rate
+* Highly imbalanced classification problem
 
 Dataset Source:
 https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
@@ -465,6 +491,7 @@ https://github.com/AdithyaRaoK14
 # Related Project
 
 ## CodeIntel-RAG
+
 Agentic RAG platform for codebase intelligence with MCP integration.
 
 https://github.com/AdithyaRaoK14/CodeIntel-RAG-Agentic-Codebase-Intelligence-Platform-with-MCP.git
