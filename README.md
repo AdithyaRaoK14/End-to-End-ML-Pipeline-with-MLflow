@@ -1,4 +1,6 @@
-# End-to-End ML Pipeline with MLflow
+![CI](https://github.com/AdithyaRaoK14/End-to-End-ML-Pipeline-with-MLflow/actions/workflows/ci.yml/badge.svg)
+
+# Real-Time Fraud Detection ML Platform
 
 ### Credit Card Fraud Detection · FastAPI · MLflow · Streamlit · Drift Detection · Auto Retraining
 
@@ -19,6 +21,19 @@ A production-style end-to-end machine learning pipeline for real-time credit car
 
 The project demonstrates the complete ML lifecycle from data preprocessing and experimentation to deployment, monitoring, drift analysis, and production-safe retraining.
 
+---
+
+# Production Features
+
+- MLflow model registry
+- Production model aliases
+- Drift-triggered retraining
+- Real-time inference APIs
+- SHAP explainability
+- Monitoring dashboard
+- Prediction logging
+- Rate limiting
+- Docker deployment
 ---
 
 # Key Results
